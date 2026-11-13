@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #2b2520;
+  --color-ink-soft: #574d44;
+  --color-muted: #8a7e72;
+  --color-line: #ebe4d8;
+  --color-line-strong: #d9cfbf;
+  --color-paper: #faf6ef;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  word-break: keep-all;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[id^="s"] {
+  scroll-margin-top: 140px;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 py-1.5 text-sm text-ink transition hover:bg-stone-50 active:bg-stone-100 disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply border-transparent bg-amber-500 font-semibold text-white hover:bg-amber-600 active:bg-amber-700;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-white p-5 shadow-[0_1px_2px_rgba(60,40,20,0.04)];
+  }
+  .section-title {
+    @apply mb-2.5 text-sm font-bold text-amber-700;
+  }
+}
+
+/* 오버레이 모드: 영상 위에 겹치는 패널. --ov-a(투명도 슬라이더)로 배경만 투명하게, 글씨는 그대로 */
+.ov {
+  background-color: rgb(250 246 239 / calc(var(--ov-a, 0.75) * 0.35));
+}
+.ov .bg-white,
+.ov .card {
+  background-color: rgb(255 255 255 / var(--ov-a, 0.75));
+}
+.ov .bg-paper,
+.ov .bg-stone-50 {
+  background-color: rgb(250 246 239 / var(--ov-a, 0.75));
+}
+.ov .border-line {
+  border-color: rgb(235 228 216 / var(--ov-a, 0.75));
+}
