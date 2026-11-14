@@ -133,7 +133,7 @@ export function RoleView() {
               </div>
               <ol className="space-y-2">
                 {cues.map((c, i) => {
-                  const end = cues[i + 1]?.t ?? c.t + 3;
+                  const end = c.until ?? cues[i + 1]?.t ?? c.t + 3;
                   const active = time >= c.t - 0.5 && time < end;
                   const ly = lyricAt(c.t);
                   return (
@@ -142,7 +142,7 @@ export function RoleView() {
                       className={`rounded-lg px-2 py-1.5 ${active ? "bg-amber-100" : "bg-paper"}`}
                     >
                       <div className="flex items-start gap-2">
-                        <TimeLink t={c.t} />
+                        <TimeLink t={c.t} until={c.until} />
                         <KindBadge kind={c.kind} />
                         <span className={`text-[15px] leading-snug ${active ? "text-amber-900" : ""}`}>
                           {c.text}

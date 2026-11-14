@@ -99,7 +99,7 @@ export function LyricsView() {
               const to = sc.lyrics[i + 1] ? sc.lyrics[i + 1].s - 1.5 : sc.end;
               const cues =
                 withRole !== NONE
-                  ? (sc.actions[withRole] ?? []).filter((c) => c.t >= from && c.t < to)
+                  ? (sc.actions[withRole] ?? []).filter((c) => c.t < to && (c.until ?? c.t) >= from)
                   : [];
               return (
                 <li

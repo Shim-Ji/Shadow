@@ -4,15 +4,16 @@ import { fmt, type Cue } from "@/lib/data";
 import { usePlayer } from "./Player";
 
 /** 누르면 영상이 해당 시점으로 이동하는 시간 표시 */
-export function TimeLink({ t, lead = 1 }: { t: number; lead?: number }) {
+export function TimeLink({ t, until, lead = 1 }: { t: number; until?: number; lead?: number }) {
   const { seek } = usePlayer();
+  const range = until != null && until - t >= 1.5;
   return (
     <button
       onClick={() => seek(t - lead)}
       className="shrink-0 rounded bg-stone-100 px-1.5 font-mono text-xs tabular-nums text-amber-800 hover:bg-amber-400 hover:text-black"
       title={`${fmt(t)}로 이동`}
     >
-      {fmt(t)}
+      {range ? `${fmt(t)}–${fmt(until)}` : fmt(t)}
     </button>
   );
 }
@@ -32,7 +33,7 @@ export function KindBadge({ kind }: { kind?: Cue["kind"] }) {
 
 /** 동작 한 줄. 지금 재생 시점과 가까우면 강조합니다 */
 export function CueRow({ cue, time, next }: { cue: Cue; time: number; next?: number }) {
-  const end = next ?? cue.t + 3;
+  const end = cue.until ?? next ?? cue.t + 3;
   const active = time >= cue.t - 0.5 && time < end;
   return (
     <li
@@ -40,7 +41,7 @@ export function CueRow({ cue, time, next }: { cue: Cue; time: number; next?: num
         active ? "bg-amber-100 text-amber-900" : "text-ink"
       }`}
     >
-      <TimeLink t={cue.t} />
+      <TimeLink t={cue.t} until={cue.until} />
       <KindBadge kind={cue.kind} />
       <span className="leading-snug">{cue.text}</span>
     </li>

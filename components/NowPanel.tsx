@@ -57,7 +57,7 @@ export function NowPanel({ className = "" }: { className?: string }) {
                 )}
                 {nxt && (
                   <span className="mt-0.5 block text-xs text-muted">
-                    {fmt(nxt.t)} 다음: {nxt.text}
+                    {fmt(nxt.t)}부터 다음: {nxt.text}
                   </span>
                 )}
               </span>
