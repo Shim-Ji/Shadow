@@ -40,11 +40,19 @@ function read<T>(key: string, fallback: T): T {
   return value;
 }
 
-export function usePersistent<T>(key: string, fallback: T): [T, (v: T | ((prev: T) => T)) => void] {
+/**
+ * @param serverValue 서버 렌더링(첫 화면)에서 쓸 값. 지정하지 않으면 fallback.
+ *   예) 처음 방문 안내는 서버에서 "본 것"으로 두어야 재방문자에게 깜빡이지 않습니다.
+ */
+export function usePersistent<T>(
+  key: string,
+  fallback: T,
+  serverValue?: T,
+): [T, (v: T | ((prev: T) => T)) => void] {
   const value = useSyncExternalStore(
     subscribe,
     () => read(key, fallback),
-    () => fallback,
+    () => (serverValue === undefined ? fallback : serverValue),
   );
   const set = useCallback(
     (v: T | ((prev: T) => T)) => {

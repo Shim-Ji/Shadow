@@ -81,10 +81,10 @@ export function LyricsView() {
         </label>
         <p className="text-xs text-muted">
           {mode === "hide"
-            ? "가려진 줄을 누르면 가사가 보입니다. 먼저 소리 내어 말해 본 뒤 확인하세요."
+            ? "가려진 줄을 누르면 가사가 보이고, 한 번 더 누르면 그 줄이 재생돼요. 먼저 소리 내어 말해 본 뒤 확인하세요."
             : mode === "hint"
-              ? "첫소리(초성)만 보고 가사를 떠올려 보세요. 누르면 전체 가사가 보입니다."
-              : "▶는 한 줄만, 🔁는 그 줄을 반복 재생합니다. 다 외운 줄은 체크해 두세요."}
+              ? "첫소리(초성)만 보고 가사를 떠올려 보세요. 누르면 전체 가사가 보이고, 한 번 더 누르면 재생돼요."
+              : "가사 줄을 누르면 그 줄만 재생돼요. 🔁는 그 줄을 반복합니다. 다 외운 줄은 체크해 두세요."}
         </p>
       </div>
 
@@ -112,9 +112,13 @@ export function LyricsView() {
                   <div className="flex items-center gap-2">
                     <TimeLink t={l.s} lead={0.5} />
                     <button
-                      onClick={() => setRevealed((r) => ({ ...r, [l.s]: !r[l.s] }))}
-                      disabled={mode === "full"}
-                      className={`min-w-0 flex-1 text-left text-lg leading-snug ${
+                      onClick={() =>
+                        mode === "full" || revealed[l.s]
+                          ? playRange(l.s - 0.5, l.e + 0.5, false, l.text)
+                          : setRevealed((r) => ({ ...r, [l.s]: true }))
+                      }
+                      title={mode === "full" || revealed[l.s] ? "누르면 이 줄을 재생해요" : "누르면 가사가 보여요"}
+                      className={`min-w-0 flex-1 rounded-md px-1 py-1 text-left text-lg leading-snug hover:bg-amber-50 ${
                         active ? "font-bold text-amber-800" : ""
                       }`}
                     >

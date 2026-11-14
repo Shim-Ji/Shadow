@@ -4,7 +4,7 @@ import { PROPS, ROLES, SCENES, VIDEO_DURATION, fmt, lyricAt, type RoleId } from 
 import { usePersistent } from "@/lib/store";
 import { usePlayer } from "./Player";
 import { RoleDot, useCast } from "./Cast";
-import { KindBadge, TimeLink } from "./ui";
+import { KindBadge, SeekRow, TimeLabel } from "./ui";
 
 const DEFAULT_ROLE: RoleId = "prince";
 
@@ -137,12 +137,14 @@ export function RoleView() {
                   const active = time >= c.t - 0.5 && time < end;
                   const ly = lyricAt(c.t);
                   return (
-                    <li
+                    <SeekRow
                       key={i}
-                      className={`rounded-lg px-2 py-1.5 ${active ? "bg-amber-100" : "bg-paper"}`}
+                      t={c.t}
+                      active={active}
+                      className={`px-2.5 py-2 ${active ? "" : "bg-paper"}`}
                     >
                       <div className="flex items-start gap-2">
-                        <TimeLink t={c.t} until={c.until} />
+                        <TimeLabel t={c.t} until={c.until} />
                         <KindBadge kind={c.kind} />
                         <span className={`text-[15px] leading-snug ${active ? "text-amber-900" : ""}`}>
                           {c.text}
@@ -151,7 +153,7 @@ export function RoleView() {
                       {ly && (
                         <div className="mt-1 pl-12 text-xs text-muted">♪ {ly.text}</div>
                       )}
-                    </li>
+                    </SeekRow>
                   );
                 })}
               </ol>

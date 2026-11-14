@@ -6,7 +6,7 @@ import { usePersistent } from "@/lib/store";
 import { usePlayer } from "./Player";
 import { RoleDot, useCast } from "./Cast";
 import { StageDiagram } from "./Stage";
-import { CueRow, TimeLink } from "./ui";
+import { CueRow, SeekRow, TimeLabel } from "./ui";
 
 const EMPTY_NOTES: Record<string, string> = {};
 const EMPTY_DONE: Record<string, boolean> = {};
@@ -137,16 +137,14 @@ export function StructureView() {
                 {sc.lyrics.length > 0 && (
                   <div>
                     <h3 className="section-title">가사</h3>
-                    <ol className="space-y-1">
+                    <ol className="space-y-0.5">
                       {sc.lyrics.map((l) => {
                         const active = time >= l.s - 0.3 && time < l.e + 0.5;
                         return (
-                          <li key={l.s} className="flex items-baseline gap-2">
-                            <TimeLink t={l.s} />
-                            <span className={active ? "font-semibold text-amber-700" : ""}>
-                              {l.text}
-                            </span>
-                          </li>
+                          <SeekRow key={l.s} t={l.s} active={active} className="flex items-baseline gap-2 px-2 py-1">
+                            <TimeLabel t={l.s} />
+                            <span className={active ? "font-semibold" : ""}>{l.text}</span>
+                          </SeekRow>
                         );
                       })}
                     </ol>

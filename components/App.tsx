@@ -12,6 +12,7 @@ import { PropsView } from "./PropsView";
 import { LyricsView } from "./LyricsView";
 import { CastView } from "./Cast";
 import { AdviceView } from "./AdviceView";
+import { Tutorial } from "./Tutorial";
 
 const TABS = [
   { id: "structure", name: "전체 구조", short: "구조", icon: "🎬" },
@@ -215,6 +216,24 @@ function Shell() {
   const [ovAlpha, setOvAlpha] = usePersistent<number>("overlayAlpha", DEFAULT_OV_ALPHA);
   const wide = useMedia(WIDE_QUERY, true);
   const [panelOpen, setPanelOpen] = useState(true);
+  // 처음 방문하면 사용법 안내를 자동으로 띄움 (서버 렌더링에서는 '본 것'으로 처리)
+  const [tutorialSeen, setTutorialSeen] = usePersistent<boolean>("tutorialSeen", false, true);
+  const [tutorialManual, setTutorialManual] = useState(false);
+  const tutorialOpen = tutorialManual || !tutorialSeen;
+  const closeTutorial = () => {
+    setTutorialManual(false);
+    setTutorialSeen(true);
+  };
+  const helpButton = (
+    <button
+      className="btn px-2.5"
+      onClick={() => setTutorialManual(true)}
+      title="사용법 보기"
+      aria-label="사용법 보기"
+    >
+      ❓<span className="hidden lg:inline">사용법</span>
+    </button>
+  );
   const barRef = useRef<HTMLDivElement | null>(null);
   const mainRef = useRef<HTMLElement | null>(null);
 
@@ -294,7 +313,8 @@ function Shell() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <PlayerControls />
             <DesktopTabs tab={tab} setTab={changeTab} />
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
+              {helpButton}
               <LayoutPicker value={chosen} onChange={changeLayout} wide={wide} />
             </div>
           </div>
@@ -348,6 +368,17 @@ function Shell() {
 
       <MobileTabs tab={tab} setTab={changeTab} hidden={isOverlay} />
 
+      <Tutorial
+        open={tutorialOpen}
+        onClose={closeTutorial}
+        onOpenTab={(t) => {
+          if (TABS.some((x) => x.id === t)) {
+            if (isOverlay) changeOvView(t as TabId);
+            else changeTab(t as TabId);
+          }
+        }}
+      />
+
       {/* 오버레이 모드: 왼쪽 위 작은 조작 버튼 */}
       {isOverlay && (
         <div className="fixed left-2 top-2 z-30 flex max-w-[calc(100vw-1rem)] flex-wrap items-center gap-2 rounded-xl bg-white/85 p-1.5 shadow-lg backdrop-blur">
@@ -356,6 +387,7 @@ function Shell() {
             {panelOpen ? "내용 숨기기" : "내용 보기"}
           </button>
           <LayoutPicker value={chosen} onChange={changeLayout} wide={wide} compact />
+          {helpButton}
         </div>
       )}
 
